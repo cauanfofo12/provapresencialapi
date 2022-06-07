@@ -1,11 +1,21 @@
-export { con } from '../index.js'
-import mysql from 'mysql2/promise.js'
+import mysql from 'mysql2/promise'
 
-const con = await mysql.createconnection({
-    host:process.env.MYSQL_HOST,
-    user:process.env.MYSQL_USER,
-    password:process.env.MYSQL_PDW,
-    database:process.env.MYSQL_DB
+const con = await mysql.createConnection({
+    host: process.env.MYSQL_HOST,
+    user: process.env.MYSQL_USER,
+    password: process.env.MYSQL_PWD,
+    database: process.env.MYSQL_DB,
+    typeCast: function(field, next){
+        if(field.type === 'TINY' && field.lenght === 1){
+            return (field.string() === '1');
+        
+        }
+        else{
+            return next();
+        }
+    }
 })
 
-console.log('BD conectado')
+console.log('BD conectado!!!!!!');
+
+export { con }
